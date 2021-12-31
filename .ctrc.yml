@@ -1,0 +1,30 @@
+# Copyright 2021 Practically.io All rights reserved
+#
+# Use of this source is governed by a BSD-style
+# licence that can be found in the LICENCE file or at
+# https://www.practically.io/copyright/
+
+hooks:
+  commit-msg:
+    - conventional-tools commitlint
+  pre-push:
+    - conventional-tools commitlint -l1
+  prepare-commit-msg:
+    - |
+      # Commitgen
+      if [ -z "${2}" ]; then
+          echo "$(conventional-tools commitgen)$(cat ${1})" > ${1};
+      fi
+  pre-commit:
+    - $(git rev-parse --show-toplevel)/.github/hooks/prettier.sh
+    - $(git rev-parse --show-toplevel)/.github/hooks/no-yaml-files.sh
+    - $(git rev-parse --show-toplevel)/.github/hooks/check-copyright.sh
+    - $(git rev-parse --show-toplevel)/.github/hooks/check-email.sh
+    - $(git rev-parse --show-toplevel)/.github/hooks/clang-format.sh
+commit:
+  scopes:
+    - analyser
+    - framework
+    - generator
+    - lsp
+    - protocol

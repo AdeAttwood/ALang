@@ -1,0 +1,58 @@
+# Copyright 2021-2022 Practically.io All rights reserved
+#
+# Use of this source is governed by a BSD-style
+# licence that can be found in the LICENCE file or at
+# https://www.practically.io/copyright/
+
+name: CI
+on: [push, pull_request]
+jobs:
+  commits:
+    name: Commitlint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 1000
+
+      - name: Lint commits
+        uses: docker://registry.k1.zportal.co.uk/practically-oss/conventional-tools:0.x
+        with:
+          args: conventional-tools commitlint -l1
+
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Install APT Dependencies
+        run: sudo apt-get update && sudo apt-get install --no-install-recommends -y curl zip unzip tar git cmake build-essential llvm-12-dev pkg-config libz-dev
+
+      - name: Setup VCPKG
+        env: { VCPKG_ROOT: /tmp/vcpkg }
+        run: |
+          git clone --depth 1 https://github.com/Microsoft/vcpkg.git $VCPKG_ROOT
+          $VCPKG_ROOT/bootstrap-vcpkg.sh
+          $VCPKG_ROOT/vcpkg install fmt gtest nlohmann-json antlr4
+
+      - name: Build
+        env: { VCPKG_ROOT: /tmp/vcpkg }
+        run: mkdir build && cd build && cmake -DCMAKE_TOOLCHAIN_FILE=${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake -DCMAKE_BUILD_TYPE=Release .. && make -j
+
+  lint_cpp:
+    name: Lint CPP
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Install Dependencies
+        run: sudo apt-get update && sudo apt-get install --no-install-recommends -y clang-format findutils
+
+      - name: Lint
+        run: find ./src -name "*.cpp" -o -name "*.hpp" | xargs clang-format -Werror --dry-run

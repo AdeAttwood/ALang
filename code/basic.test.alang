@@ -1,0 +1,10 @@
+
+/// Test running a basic main function that returns and integer
+function main_test(): int { return 0; }
+
+function return_void(): void {}
+/// Test you can call a function that returns void
+function return_void_test(): int {
+  return_void();
+  return 0;
+}

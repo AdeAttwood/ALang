@@ -1,0 +1,14 @@
+
+/// Test defining a void function without syntax errors
+function basic_assignment_test(): int {
+  int a = 0;
+  int b = a;
+  return b;
+}
+
+/// Test defining a void function without syntax errors
+function int_variables_test(): int {
+  int a = 0;
+  int b = a;
+  return b;
+}
