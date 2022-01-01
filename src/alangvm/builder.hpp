@@ -7,16 +7,15 @@
 
 #include <llvm/ExecutionEngine/ExecutionEngine.h>
 #include <llvm/ExecutionEngine/GenericValue.h>
+#include <llvm/ExecutionEngine/Interpreter.h>
 #include <llvm/ExecutionEngine/MCJIT.h>
 #include <llvm/IR/IRBuilder.h>
+#include <llvm/IR/Module.h>
 #include <llvm/Support/TargetSelect.h>
 
 #include <map>
 #include <memory>
 #include <parser/alang.hpp>
-
-#include "llvm/ExecutionEngine/Interpreter.h"
-#include "llvm/IR/Module.h"
 
 namespace alangvm {
 
@@ -33,29 +32,22 @@ struct LLVMBuilderScope {
 };
 
 class LLVMBuilderListener : public parser::alang::ALangBaseListener {
-  std::unique_ptr<llvm::LLVMContext> m_context;
-  std::unique_ptr<llvm::Module> m_module;
+  llvm::LLVMContext &m_context;
+  llvm::Module &m_module;
   std::unique_ptr<llvm::IRBuilder<>> m_builder;
-
   std::vector<LLVMBuilderScope> m_scopes;
 
  public:
-  LLVMBuilderListener() {
-    m_context = std::make_unique<llvm::LLVMContext>();
-    m_module = std::make_unique<llvm::Module>("main", *m_context);
-    m_builder = std::make_unique<llvm::IRBuilder<>>(*m_context);
-
+  LLVMBuilderListener(llvm::LLVMContext &context, llvm::Module &module)
+      : m_context(context), m_module(module) {
+    m_builder = std::make_unique<llvm::IRBuilder<>>(llvm::IRBuilder<>(context));
     m_scopes.push_back(LLVMBuilderScope{});
 
     auto type = m_builder->getInt8PtrTy();
     auto printf_prototype = llvm::FunctionType::get(type, true);
-    auto printf_fn = llvm::Function::Create(printf_prototype, llvm::Function::ExternalLinkage, "printf", m_module.get());
+    auto printf_fn = llvm::Function::Create(printf_prototype, llvm::Function::ExternalLinkage, "printf", m_module);
     m_scopes.back().functions.insert({"printf", printf_fn});
   }
-
-  std::unique_ptr<llvm::Module> module() { return std::move(m_module); }
-
-  void print() { m_module->print(llvm::outs(), nullptr); }
 
   std::vector<AlangTestFunction> test_functions() {
     std::vector<AlangTestFunction> tests;
@@ -91,14 +83,5 @@ class LLVMBuilderListener : public parser::alang::ALangBaseListener {
 
   void enterFunctionCall(parser::alang::ALangParser::FunctionCallContext *) override;
 };
-
-inline std::shared_ptr<LLVMBuilderListener> build(const std::string &file_path) {
-  auto parser = parser::alang::Parser(file_path);
-
-  auto listener = std::make_shared<LLVMBuilderListener>();
-  parser.pass(listener.get());
-
-  return listener;
-}
 
 }  // namespace alangvm

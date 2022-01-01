@@ -9,9 +9,13 @@
 #include <filesystem>
 #include <framework/cli/single_command_application.hpp>
 #include <iostream>
+#include <memory>
 #include <parser/alang.hpp>
 
 #include "config.h"
+#include "llvm/IR/Module.h"
+
+static llvm::LLVMContext context;
 
 framework::cli::ExitCode run(framework::cli::Command command) {
   auto path = command.arguments().at(0);
@@ -30,15 +34,23 @@ framework::cli::ExitCode run(framework::cli::Command command) {
   auto absolute_path = std::filesystem::absolute(path.string());
 
   try {
-    auto builder = alangvm::build(absolute_path);
+    auto owned_module = std::make_unique<llvm::Module>("main", context);
+    auto module = owned_module.get();
+
+    {
+      auto listener = alangvm::LLVMBuilderListener(context, *module);
+      auto parser = parser::alang::Parser(absolute_path);
+      parser.pass(listener);
+    }
+
     if (command.flags().at("ir").boolean()) {
-      builder->print();
+      module->print(llvm::outs(), nullptr);
+      owned_module.release();
       return framework::cli::ExitCode::OK;
     }
 
-    auto runner = alangvm::LLVMRunner(builder->module());
-    auto return_value = runner.run_main();
-    return static_cast<framework::cli::ExitCode>(return_value);
+    auto runner = alangvm::LLVMRunner(std::move(owned_module));
+    return static_cast<framework::cli::ExitCode>(runner.run_main());
   } catch (const std::exception& e) {
     command.write_line(std::string("<fg:red>Error:<reset> ") + e.what());
     return framework::cli::ExitCode::ERROR;

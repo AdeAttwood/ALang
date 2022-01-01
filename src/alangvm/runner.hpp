@@ -18,12 +18,8 @@ class LLVMRunner {
     llvm::InitializeAllAsmPrinters();
     llvm::InitializeNativeTarget();
 
-    m_execution_engine = llvm::EngineBuilder(std::move(module))
-                             .setEngineKind(llvm::EngineKind::JIT)
-                             .create();
+    m_execution_engine = llvm::EngineBuilder(std::move(module)).setEngineKind(llvm::EngineKind::JIT).create();
   }
-
-  ~LLVMRunner() { delete m_execution_engine; }
 
   int run_function(const std::string& name) {
     auto main = m_execution_engine->FindFunctionNamed(llvm::StringRef(name));

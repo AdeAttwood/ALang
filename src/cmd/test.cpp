@@ -12,33 +12,42 @@
 
 #include "config.h"
 
+static llvm::LLVMContext context;
+
 bool run_test(framework::cli::Command &command, int &index, int &failures, const std::filesystem::path &path) {
   auto test_path = path.string();
   auto module_name = path.filename().string();
   module_name = module_name.substr(0, module_name.length() - 11);
 
-  command.write_line("<fg:yellow>Module: <reset>" + module_name);
+  command.write_line(std::string("<fg:yellow>Module:<reset> " + module_name));
 
-  std::shared_ptr<alangvm::LLVMBuilderListener> builder;
+  auto owned_module = std::make_unique<llvm::Module>(module_name, context);
+  auto module = owned_module.get();
+  std::vector<alangvm::AlangTestFunction> test_functions;
 
   try {
-    builder = alangvm::build(std::filesystem::absolute(test_path));
-    auto runner = alangvm::LLVMRunner(builder->module());
-    for (auto &test : builder->test_functions()) {
-      auto test_name = test.name;
-      index++;
+    auto listener = alangvm::LLVMBuilderListener(context, *module);
+    auto parser = parser::alang::Parser(std::filesystem::absolute(test_path));
+    parser.pass(listener);
 
-      auto result = runner.run_function(test.name);
-      if (result == 0) {
-        command.write_line("  <fg:green>PASS<reset> " + test_name);
-      } else {
-        command.write_line("  <fg:red>FAIL<reset> " + test_name);
-        failures++;
-      }
-    }
+    test_functions = listener.test_functions();
   } catch (const std::exception &e) {
     command.write_line(std::string("  <fg:red>ERROR<reset> ") + e.what());
     failures++;
+  }
+
+  auto runner = alangvm::LLVMRunner(std::move(owned_module));
+  for (auto &test : test_functions) {
+    auto test_name = test.name;
+    index++;
+
+    auto result = runner.run_function(test.name);
+    if (result == 0) {
+      command.write_line("  <fg:green>PASS<reset> " + test_name);
+    } else {
+      command.write_line("  <fg:red>FAIL<reset> " + test_name);
+      failures++;
+    }
   }
 
   return true;
@@ -57,6 +66,13 @@ framework::cli::ExitCode run(framework::cli::Command command) {
     if (entry.is_regular_file() && entry.path().string().ends_with(".test.alang")) {
       run_test(command, index, failures, entry.path());
     }
+  }
+
+  command.write_line("");
+  if (failures > 0) {
+    command.write_line("<fg:red>Error:<reset> " + std::to_string(failures) + " tests failed out of " + std::to_string(index));
+  } else {
+    command.write_line("<fg:green>Success:<reset> All tests has passed");
   }
 
   return failures > 0 ? framework::cli::ExitCode::ERROR : framework::cli::ExitCode::OK;

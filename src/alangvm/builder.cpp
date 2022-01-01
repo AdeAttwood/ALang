@@ -69,13 +69,13 @@ llvm::Value *LLVMBuilderListener::evaluate_expression(parser::alang::ALangParser
 
   auto number = expression->NUMBER();
   if (number) {
-    return llvm::ConstantInt::get(*m_context, llvm::APInt(32, std::stoi(number->getText())));
+    return llvm::ConstantInt::get(m_context, llvm::APInt(32, std::stoi(number->getText())));
   }
 
   auto boolean = expression->BooleanConstant();
   if (boolean) {
     auto boolean_value = boolean->getText() == "true" ? 1 : 0;
-    return llvm::ConstantInt::get(*m_context, llvm::APInt(1, boolean_value));
+    return llvm::ConstantInt::get(m_context, llvm::APInt(1, boolean_value));
   }
 
   auto string = expression->DoubleQuoteString();
@@ -143,8 +143,8 @@ void LLVMBuilderListener::enterFunctionDeclaration(parser::alang::ALangParser::F
     prototype = llvm::FunctionType::get(return_type, false);
   }
 
-  auto function = llvm::Function::Create(prototype, llvm::Function::ExternalLinkage, function_name, m_module.get());
-  llvm::BasicBlock *body = llvm::BasicBlock::Create(*m_context, "body", function);
+  auto function = llvm::Function::Create(prototype, llvm::Function::ExternalLinkage, function_name, m_module);
+  llvm::BasicBlock *body = llvm::BasicBlock::Create(m_context, "body", function);
   m_builder->SetInsertPoint(body);
 
   m_scopes.back().functions.insert({function_name, function});
@@ -160,7 +160,7 @@ void LLVMBuilderListener::enterFunctionDeclaration(parser::alang::ALangParser::F
       auto argument = function->getArg(index++);
       argument->setName(variable_name + "_param");
 
-      auto allocation = m_builder->CreateAlloca(argument->getType(), 0, argument->getName());
+      auto allocation = m_builder->CreateAlloca(argument->getType(), nullptr, argument->getName());
       m_scopes.back().variables.insert({variable_name, allocation});
       m_builder->CreateStore(argument, allocation);
     }
@@ -181,16 +181,16 @@ void LLVMBuilderListener::enterIfElseIfElseStatement(parser::alang::ALangParser:
       .current_function = m_scopes.back().current_function,
   });
 
-  m_scopes.back().block_stack.push_back(llvm::BasicBlock::Create(*m_context, "merge"));
+  m_scopes.back().block_stack.push_back(llvm::BasicBlock::Create(m_context, "merge"));
   if (context->elseStatement()) {
-    m_scopes.back().block_stack.push_back(llvm::BasicBlock::Create(*m_context, "else"));
+    m_scopes.back().block_stack.push_back(llvm::BasicBlock::Create(m_context, "else"));
   }
 
   for (auto else_if : context->elseIfStatement()) {
-    m_scopes.back().block_stack.push_back(llvm::BasicBlock::Create(*m_context, "elseif"));
+    m_scopes.back().block_stack.push_back(llvm::BasicBlock::Create(m_context, "elseif"));
   }
 
-  m_scopes.back().block_stack.push_back(llvm::BasicBlock::Create(*m_context, "then", m_scopes.back().current_function));
+  m_scopes.back().block_stack.push_back(llvm::BasicBlock::Create(m_context, "then", m_scopes.back().current_function));
 }
 
 void LLVMBuilderListener::enterIfStatement(parser::alang::ALangParser::IfStatementContext *context) {
@@ -224,7 +224,7 @@ void LLVMBuilderListener::enterElseIfStatement(parser::alang::ALangParser::ElseI
   get_current_function()->getBasicBlockList().push_back(my_block);
   m_builder->SetInsertPoint(my_block);
 
-  auto then_block = llvm::BasicBlock::Create(*m_context, "elseifthen");
+  auto then_block = llvm::BasicBlock::Create(m_context, "elseifthen");
 
   auto value = evaluate_expression(context->expression());
   m_builder->CreateCondBr(value, then_block, m_scopes.back().block_stack.back());
@@ -271,7 +271,7 @@ void LLVMBuilderListener::exitIfElseIfElseStatement(parser::alang::ALangParser::
 void LLVMBuilderListener::enterVariableDeclaration(parser::alang::ALangParser::VariableDeclarationContext *context) {
   auto variable_name = context->ID()->getText();
   auto type = get_type(context->type());
-  auto allocation = m_builder->CreateAlloca(type, 0, variable_name);
+  auto allocation = m_builder->CreateAlloca(type, nullptr, variable_name);
   m_scopes.back().variables.insert({variable_name, allocation});
 
   auto variable_value = evaluate_expression(context->expression());

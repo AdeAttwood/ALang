@@ -36,9 +36,9 @@ class Parser {
 
   std::string to_string_tree() { return m_parser.root()->toStringTree(true); }
 
-  void pass(alang::ALangBaseListener *listener) {
+  void pass(alang::ALangBaseListener &listener) {
     antlr4::tree::ParseTree *tree = m_parser.root();
-    antlr4::tree::ParseTreeWalker::DEFAULT.walk(listener, tree);
+    antlr4::tree::ParseTreeWalker::DEFAULT.walk(&listener, tree);
     m_parser.reset();
   }
 };
