@@ -29,7 +29,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Install APT Dependencies
-        run: sudo apt-get update && sudo apt-get install --no-install-recommends -y curl zip unzip tar git cmake build-essential llvm-12-dev pkg-config libz-dev
+        run: sudo apt-get update && sudo apt-get install --no-install-recommends -y curl zip unzip tar git cmake build-essential llvm-12-dev clang pkg-config libz-dev
 
       - name: Setup VCPKG
         env: { VCPKG_ROOT: /tmp/vcpkg }

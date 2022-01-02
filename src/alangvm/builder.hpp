@@ -43,7 +43,7 @@ class LLVMBuilderListener : public parser::alang::ALangBaseListener {
  public:
   LLVMBuilderListener(llvm::LLVMContext &context, llvm::Module &module)
       : m_context(context), m_module(module) {
-    m_builder = std::make_unique<llvm::IRBuilder<>>(llvm::IRBuilder<>(context));
+    m_builder = std::make_unique<llvm::IRBuilder<>>(context);
     m_scopes.push_back(LLVMBuilderScope{});
 
     auto type = m_builder->getInt8PtrTy();
@@ -59,7 +59,7 @@ class LLVMBuilderListener : public parser::alang::ALangBaseListener {
           auto ext = llvm::parseIRFile(llvm::StringRef(entry.path()), error, context);
           for (auto &function : ext->getFunctionList()) {
             m_module.getOrInsertFunction(function.getName(), function.getFunctionType());
-            m_scopes.back().functions.insert({function.getName(), m_module.getFunction(function.getName())});
+            m_scopes.back().functions.insert({function.getName().str(), m_module.getFunction(function.getName())});
           }
         }
       }

@@ -24,7 +24,7 @@ include(./cmake/package.cmake)
 
 find_package(PkgConfig REQUIRED)
 find_package(Threads REQUIRED)
-find_package(LLVM REQUIRED CONFIG)
+find_package(LLVM 12 REQUIRED CONFIG)
 find_package(nlohmann_json CONFIG REQUIRED)
 find_package(fmt CONFIG REQUIRED)
 
