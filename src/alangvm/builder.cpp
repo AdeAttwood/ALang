@@ -1,4 +1,4 @@
-// Copyright 2021 Practically.io All rights reserved
+// Copyright 2021-2022 Practically.io All rights reserved
 //
 // Use of this source is governed by a BSD-style
 // licence that can be found in the LICENCE file or at
@@ -104,8 +104,14 @@ llvm::Value *LLVMBuilderListener::evaluate_expression(parser::alang::ALangParser
   auto operation = expression->op;
   if (operation) {
     auto text = operation->getText();
-    if (text == "==") {
-      auto a = 'b';
+    auto left = evaluate_expression(expression->expression(0));
+    auto right = evaluate_expression(expression->expression(1));
+    if (text == "+") {
+      return m_builder->CreateAdd(left, right);
+    }
+
+    if (text == "-") {
+      return m_builder->CreateSub(left, right);
     }
   }
 

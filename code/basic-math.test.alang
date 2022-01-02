@@ -1,0 +1,37 @@
+// Copyright 2022 Practically.io All rights reserved
+//
+// Use of this source is governed by a BSD-style
+// licence that can be found in the LICENCE file or at
+// https://www.practically.io/copyright/
+
+/// Adding two numbers together
+function basic_add_test(): int {
+  int a = 1 + 1;
+  if (a == 2) {
+    return 0;
+  }
+
+  return 1;
+}
+
+/// Subtracting two numbers together
+function basic_subtract_test(): int {
+  int a = 1 - 1;
+  return a;
+}
+
+/// Concat adding
+function concat_add_test(): int {
+  int a = 1 + 1 + 1 + 1;
+  if (a == 4) {
+    return 0;
+  }
+
+  return 1;
+}
+
+/// Concat add with subtract
+function concat_add_and_subtract_test(): int {
+  int a = 1 + 1 - 1 - 1;
+  return a;
+}
