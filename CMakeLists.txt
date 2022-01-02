@@ -1,4 +1,4 @@
-# Copyright 2021 Practically.io All rights reserved
+# Copyright 2021-2022 Practically.io All rights reserved
 #
 # Use of this source is governed by a BSD-style
 # licence that can be found in the LICENCE file or at
@@ -49,10 +49,13 @@ if(NOT BUILD_TESTING MATCHES "OFF")
   enable_testing()
   find_package(GTest CONFIG REQUIRED)
   set(GTEST_LIB GTest::gmock GTest::gtest GTest::gmock_main GTest::gtest_main)
+
   add_test(NAME code-test COMMAND  ${CMAKE_BINARY_DIR}/${CMAKE_INSTALL_BINDIR}/alang-test ${CMAKE_SOURCE_DIR}/code)
+  set_tests_properties(code-test PROPERTIES ENVIRONMENT ALANG_PATH=${CMAKE_BINARY_DIR}/alang-ext)
 endif()
 
 add_subdirectory("${CMAKE_SOURCE_DIR}/src/framework")
 add_subdirectory("${CMAKE_SOURCE_DIR}/src/parser")
 add_subdirectory("${CMAKE_SOURCE_DIR}/src/alangvm")
 add_subdirectory("${CMAKE_SOURCE_DIR}/src/cmd")
+add_subdirectory("${CMAKE_SOURCE_DIR}/src/cpplib")
