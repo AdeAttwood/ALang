@@ -88,6 +88,7 @@ class LLVMBuilderListener : public parser::alang::ALangBaseListener {
   void enterReturnStatement(parser::alang::ALangParser::ReturnStatementContext *) override;
 
   void enterVariableDeclaration(parser::alang::ALangParser::VariableDeclarationContext *) override;
+  void enterVariableAssignment(parser::alang::ALangParser::VariableAssignmentContext *) override;
 
   void enterIfElseIfElseStatement(parser::alang::ALangParser::IfElseIfElseStatementContext *) override;
   void enterIfStatement(parser::alang::ALangParser::IfStatementContext *) override;

@@ -49,6 +49,9 @@ public:
   virtual void enterVariableDeclaration(ALangParser::VariableDeclarationContext *ctx) = 0;
   virtual void exitVariableDeclaration(ALangParser::VariableDeclarationContext *ctx) = 0;
 
+  virtual void enterVariableAssignment(ALangParser::VariableAssignmentContext *ctx) = 0;
+  virtual void exitVariableAssignment(ALangParser::VariableAssignmentContext *ctx) = 0;
+
   virtual void enterReturnStatement(ALangParser::ReturnStatementContext *ctx) = 0;
   virtual void exitReturnStatement(ALangParser::ReturnStatementContext *ctx) = 0;
 

@@ -26,9 +26,9 @@ public:
     RuleRoot = 0, RuleFunctionDeclaration = 1, RuleParameters = 2, RuleParameter = 3, 
     RuleFunctionCall = 4, RuleFunctionCallExpression = 5, RuleArguments = 6, 
     RuleBlockStatement = 7, RuleInnerStatementList = 8, RuleInnerStatement = 9, 
-    RuleVariableDeclaration = 10, RuleReturnStatement = 11, RuleIfElseIfElseStatement = 12, 
-    RuleIfStatement = 13, RuleElseIfStatement = 14, RuleElseStatement = 15, 
-    RuleExpression = 16, RuleType = 17, RuleAssignmentOperator = 18
+    RuleVariableDeclaration = 10, RuleVariableAssignment = 11, RuleReturnStatement = 12, 
+    RuleIfElseIfElseStatement = 13, RuleIfStatement = 14, RuleElseIfStatement = 15, 
+    RuleElseStatement = 16, RuleExpression = 17, RuleType = 18, RuleAssignmentOperator = 19
   };
 
   explicit ALangParser(antlr4::TokenStream *input);
@@ -52,6 +52,7 @@ public:
   class InnerStatementListContext;
   class InnerStatementContext;
   class VariableDeclarationContext;
+  class VariableAssignmentContext;
   class ReturnStatementContext;
   class IfElseIfElseStatementContext;
   class IfStatementContext;
@@ -210,6 +211,7 @@ public:
     IfElseIfElseStatementContext *ifElseIfElseStatement();
     ReturnStatementContext *returnStatement();
     VariableDeclarationContext *variableDeclaration();
+    VariableAssignmentContext *variableAssignment();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
@@ -234,6 +236,22 @@ public:
   };
 
   VariableDeclarationContext* variableDeclaration();
+
+  class  VariableAssignmentContext : public antlr4::ParserRuleContext {
+  public:
+    VariableAssignmentContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    antlr4::tree::TerminalNode *ID();
+    antlr4::tree::TerminalNode *Equals();
+    ExpressionContext *expression();
+    antlr4::tree::TerminalNode *SemiColon();
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+   
+  };
+
+  VariableAssignmentContext* variableAssignment();
 
   class  ReturnStatementContext : public antlr4::ParserRuleContext {
   public:

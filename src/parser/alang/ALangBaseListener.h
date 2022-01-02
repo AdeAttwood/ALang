@@ -51,6 +51,9 @@ public:
   virtual void enterVariableDeclaration(ALangParser::VariableDeclarationContext * /*ctx*/) override { }
   virtual void exitVariableDeclaration(ALangParser::VariableDeclarationContext * /*ctx*/) override { }
 
+  virtual void enterVariableAssignment(ALangParser::VariableAssignmentContext * /*ctx*/) override { }
+  virtual void exitVariableAssignment(ALangParser::VariableAssignmentContext * /*ctx*/) override { }
+
   virtual void enterReturnStatement(ALangParser::ReturnStatementContext * /*ctx*/) override { }
   virtual void exitReturnStatement(ALangParser::ReturnStatementContext * /*ctx*/) override { }
 

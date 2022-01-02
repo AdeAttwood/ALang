@@ -286,6 +286,12 @@ void LLVMBuilderListener::enterVariableDeclaration(parser::alang::ALangParser::V
   }
 }
 
+void LLVMBuilderListener::enterVariableAssignment(parser::alang::ALangParser::VariableAssignmentContext *context) {
+  auto allocation = get_variable(context->ID());
+  auto variable_value = evaluate_expression(context->expression());
+  m_builder->CreateStore(variable_value, allocation);
+}
+
 void LLVMBuilderListener::enterReturnStatement(parser::alang::ALangParser::ReturnStatementContext *context) {
   auto return_value = evaluate_expression(context->expression());
   if (return_value) {

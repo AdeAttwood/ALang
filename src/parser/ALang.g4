@@ -41,10 +41,15 @@ innerStatement
  | ifElseIfElseStatement
  | returnStatement
  | variableDeclaration
+ | variableAssignment
  ;
 
 variableDeclaration
  : type ID Equals expression SemiColon
+ ;
+
+variableAssignment
+ : ID Equals expression SemiColon
  ;
 
 returnStatement
