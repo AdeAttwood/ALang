@@ -13,13 +13,13 @@ namespace parser::alang {
 class  ALangParser : public antlr4::Parser {
 public:
   enum {
-    T__0 = 1, T__1 = 2, T__2 = 3, T__3 = 4, T__4 = 5, DocumentationComment = 6, 
-    Comment = 7, Return = 8, Function_ = 9, If = 10, Else = 11, ElseIf = 12, 
-    Int = 13, Void = 14, String = 15, Boolean = 16, BooleanConstant = 17, 
-    ID = 18, NUMBER = 19, OpenCurlyBracket = 20, CloseCurlyBracket = 21, 
-    OpenRoundBracket = 22, CloseRoundBracket = 23, OpenSquareBracket = 24, 
-    CloseSquareBracket = 25, Colon = 26, SemiColon = 27, Equals = 28, DoubleQuote = 29, 
-    DoubleQuoteString = 30, SPACE = 31
+    T__0 = 1, T__1 = 2, T__2 = 3, T__3 = 4, T__4 = 5, T__5 = 6, T__6 = 7, 
+    DocumentationComment = 8, Comment = 9, Return = 10, Function_ = 11, 
+    If = 12, Else = 13, ElseIf = 14, Int = 15, Void = 16, String = 17, Boolean = 18, 
+    BooleanConstant = 19, ID = 20, NUMBER = 21, OpenCurlyBracket = 22, CloseCurlyBracket = 23, 
+    OpenRoundBracket = 24, CloseRoundBracket = 25, OpenSquareBracket = 26, 
+    CloseSquareBracket = 27, Colon = 28, SemiColon = 29, Equals = 30, DoubleQuote = 31, 
+    DoubleQuoteString = 32, SPACE = 33
   };
 
   enum {
@@ -334,15 +334,17 @@ public:
 
   class  ExpressionContext : public antlr4::ParserRuleContext {
   public:
-    antlr4::Token *op = nullptr;
+    antlr4::Token *operation = nullptr;
     antlr4::Token *test = nullptr;
     ExpressionContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
+    antlr4::tree::TerminalNode *OpenRoundBracket();
+    std::vector<ExpressionContext *> expression();
+    ExpressionContext* expression(size_t i);
+    antlr4::tree::TerminalNode *CloseRoundBracket();
     FunctionCallExpressionContext *functionCallExpression();
     antlr4::tree::TerminalNode *ID();
     AssignmentOperatorContext *assignmentOperator();
-    std::vector<ExpressionContext *> expression();
-    ExpressionContext* expression(size_t i);
     antlr4::tree::TerminalNode *BooleanConstant();
     antlr4::tree::TerminalNode *DoubleQuoteString();
     antlr4::tree::TerminalNode *NUMBER();

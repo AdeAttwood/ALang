@@ -101,11 +101,20 @@ llvm::Value *LLVMBuilderListener::evaluate_expression(parser::alang::ALangParser
     }
   }
 
-  auto operation = expression->op;
+  auto operation = expression->operation;
   if (operation) {
     auto text = operation->getText();
     auto left = evaluate_expression(expression->expression(0));
     auto right = evaluate_expression(expression->expression(1));
+
+    if (text == "/") {
+      return m_builder->CreateSDiv(left, right);
+    }
+
+    if (text == "*") {
+      return m_builder->CreateMul(left, right);
+    }
+
     if (text == "+") {
       return m_builder->CreateAdd(left, right);
     }
@@ -127,6 +136,12 @@ llvm::Value *LLVMBuilderListener::evaluate_expression(parser::alang::ALangParser
     if (text == "!=") {
       return m_builder->CreateICmpNE(left, right);
     }
+  }
+
+  auto nested = expression->expression(0);
+  auto length = expression->expression().size();
+  if (nested && length == 1) {
+    return evaluate_expression(nested);
   }
 
   throw std::runtime_error("Unable to evaluate expression");
