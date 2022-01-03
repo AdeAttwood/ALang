@@ -37,6 +37,8 @@ class LLVMRunner {
     }
   }
 
+  ~LLVMRunner() { delete m_execution_engine; }
+
   int run_function(const std::string& name) {
     auto main = m_execution_engine->FindFunctionNamed(llvm::StringRef(name));
     auto result = m_execution_engine->runFunction(main, {});
