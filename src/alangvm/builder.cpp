@@ -229,20 +229,20 @@ void LLVMBuilderListener::enterIfElseIfElseStatement(parser::alang::ALangParser:
       .current_function = m_scopes.back().current_function,
   });
 
-  m_scopes.back().block_stack.push_back(llvm::BasicBlock::Create(m_context, "merge"));
+  m_scopes.back().block_stack.push_back(llvm::BasicBlock::Create(m_context));
   if (context->elseStatement()) {
-    m_scopes.back().block_stack.push_back(llvm::BasicBlock::Create(m_context, "else"));
+    m_scopes.back().block_stack.push_back(llvm::BasicBlock::Create(m_context));
   }
 
   for (auto else_if : context->elseIfStatement()) {
-    m_scopes.back().block_stack.push_back(llvm::BasicBlock::Create(m_context, "elseif"));
+    m_scopes.back().block_stack.push_back(llvm::BasicBlock::Create(m_context));
   }
 
-  m_scopes.back().block_stack.push_back(llvm::BasicBlock::Create(m_context, "then", m_scopes.back().current_function));
+  m_scopes.back().block_stack.push_back(llvm::BasicBlock::Create(m_context));
 }
 
 void LLVMBuilderListener::enterIfStatement(parser::alang::ALangParser::IfStatementContext *context) {
-  auto my_block = std::move(m_scopes.back().block_stack.back());
+  auto my_block = m_scopes.back().block_stack.back();
   m_scopes.back().block_stack.erase(
       std::remove(m_scopes.back().block_stack.begin(), m_scopes.back().block_stack.end(), my_block),
       m_scopes.back().block_stack.end());
