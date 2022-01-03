@@ -1,4 +1,4 @@
-// Copyright 2021 Practically.io All rights reserved
+// Copyright 2021-2022 Practically.io All rights reserved
 //
 // Use of this source is governed by a BSD-style
 // licence that can be found in the LICENCE file or at
@@ -62,9 +62,14 @@ framework::cli::ExitCode run(framework::cli::Command command) {
 
   int index = 0;
   int failures = 0;
-  for (auto &entry : std::filesystem::recursive_directory_iterator(directory.string())) {
-    if (entry.is_regular_file() && entry.path().string().ends_with(".test.alang")) {
-      run_test(command, index, failures, entry.path());
+
+  if (std::filesystem::is_regular_file(directory.string())) {
+    run_test(command, index, failures, directory.string());
+  } else {
+    for (auto &entry : std::filesystem::recursive_directory_iterator(directory.string())) {
+      if (entry.is_regular_file() && entry.path().string().ends_with(".test.alang")) {
+        run_test(command, index, failures, entry.path());
+      }
     }
   }
 
