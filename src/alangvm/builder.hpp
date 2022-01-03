@@ -99,6 +99,9 @@ class LLVMBuilderListener : public parser::alang::ALangBaseListener {
   void exitElseStatement(parser::alang::ALangParser::ElseStatementContext *) override;
   void exitIfElseIfElseStatement(parser::alang::ALangParser::IfElseIfElseStatementContext *) override;
 
+  virtual void enterForStatement(parser::alang::ALangParser::ForStatementContext *) override;
+  virtual void exitForStatement(parser::alang::ALangParser::ForStatementContext *) override;
+
   void enterFunctionCall(parser::alang::ALangParser::FunctionCallContext *) override;
 };
 

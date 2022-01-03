@@ -15,12 +15,12 @@ public:
   enum {
     T__0 = 1, T__1 = 2, T__2 = 3, T__3 = 4, T__4 = 5, T__5 = 6, T__6 = 7, 
     T__7 = 8, T__8 = 9, T__9 = 10, T__10 = 11, T__11 = 12, T__12 = 13, DocumentationComment = 14, 
-    Comment = 15, Return = 16, Function_ = 17, If = 18, Else = 19, ElseIf = 20, 
-    Int = 21, Void = 22, String = 23, Boolean = 24, BooleanConstant = 25, 
-    ID = 26, NUMBER = 27, OpenCurlyBracket = 28, CloseCurlyBracket = 29, 
-    OpenRoundBracket = 30, CloseRoundBracket = 31, OpenSquareBracket = 32, 
-    CloseSquareBracket = 33, Colon = 34, SemiColon = 35, Equals = 36, DoubleQuote = 37, 
-    DoubleQuoteString = 38, SPACE = 39
+    Comment = 15, Return = 16, Function_ = 17, For = 18, If = 19, Else = 20, 
+    ElseIf = 21, Int = 22, Void = 23, String = 24, Boolean = 25, BooleanConstant = 26, 
+    ID = 27, NUMBER = 28, OpenCurlyBracket = 29, CloseCurlyBracket = 30, 
+    OpenRoundBracket = 31, CloseRoundBracket = 32, OpenSquareBracket = 33, 
+    CloseSquareBracket = 34, Colon = 35, SemiColon = 36, Equals = 37, DoubleQuote = 38, 
+    DoubleQuoteString = 39, SPACE = 40
   };
 
   explicit ALangLexer(antlr4::CharStream *input);

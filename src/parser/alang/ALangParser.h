@@ -15,21 +15,23 @@ public:
   enum {
     T__0 = 1, T__1 = 2, T__2 = 3, T__3 = 4, T__4 = 5, T__5 = 6, T__6 = 7, 
     T__7 = 8, T__8 = 9, T__9 = 10, T__10 = 11, T__11 = 12, T__12 = 13, DocumentationComment = 14, 
-    Comment = 15, Return = 16, Function_ = 17, If = 18, Else = 19, ElseIf = 20, 
-    Int = 21, Void = 22, String = 23, Boolean = 24, BooleanConstant = 25, 
-    ID = 26, NUMBER = 27, OpenCurlyBracket = 28, CloseCurlyBracket = 29, 
-    OpenRoundBracket = 30, CloseRoundBracket = 31, OpenSquareBracket = 32, 
-    CloseSquareBracket = 33, Colon = 34, SemiColon = 35, Equals = 36, DoubleQuote = 37, 
-    DoubleQuoteString = 38, SPACE = 39
+    Comment = 15, Return = 16, Function_ = 17, For = 18, If = 19, Else = 20, 
+    ElseIf = 21, Int = 22, Void = 23, String = 24, Boolean = 25, BooleanConstant = 26, 
+    ID = 27, NUMBER = 28, OpenCurlyBracket = 29, CloseCurlyBracket = 30, 
+    OpenRoundBracket = 31, CloseRoundBracket = 32, OpenSquareBracket = 33, 
+    CloseSquareBracket = 34, Colon = 35, SemiColon = 36, Equals = 37, DoubleQuote = 38, 
+    DoubleQuoteString = 39, SPACE = 40
   };
 
   enum {
     RuleRoot = 0, RuleFunctionDeclaration = 1, RuleParameters = 2, RuleParameter = 3, 
     RuleFunctionCall = 4, RuleFunctionCallExpression = 5, RuleArguments = 6, 
     RuleBlockStatement = 7, RuleInnerStatementList = 8, RuleInnerStatement = 9, 
-    RuleVariableDeclaration = 10, RuleVariableAssignment = 11, RuleReturnStatement = 12, 
-    RuleIfElseIfElseStatement = 13, RuleIfStatement = 14, RuleElseIfStatement = 15, 
-    RuleElseStatement = 16, RuleExpression = 17, RuleType = 18, RuleAssignmentOperator = 19
+    RuleVariableDeclaration = 10, RuleVariableDeclarationFragment = 11, 
+    RuleVariableAssignment = 12, RuleVariableAssignmentFragment = 13, RuleReturnStatement = 14, 
+    RuleIfElseIfElseStatement = 15, RuleIfStatement = 16, RuleElseIfStatement = 17, 
+    RuleElseStatement = 18, RuleForStatement = 19, RuleExpression = 20, 
+    RuleType = 21, RuleAssignmentOperator = 22
   };
 
   explicit ALangParser(antlr4::TokenStream *input);
@@ -53,12 +55,15 @@ public:
   class InnerStatementListContext;
   class InnerStatementContext;
   class VariableDeclarationContext;
+  class VariableDeclarationFragmentContext;
   class VariableAssignmentContext;
+  class VariableAssignmentFragmentContext;
   class ReturnStatementContext;
   class IfElseIfElseStatementContext;
   class IfStatementContext;
   class ElseIfStatementContext;
   class ElseStatementContext;
+  class ForStatementContext;
   class ExpressionContext;
   class TypeContext;
   class AssignmentOperatorContext; 
@@ -210,6 +215,7 @@ public:
     FunctionDeclarationContext *functionDeclaration();
     FunctionCallContext *functionCall();
     IfElseIfElseStatementContext *ifElseIfElseStatement();
+    ForStatementContext *forStatement();
     ReturnStatementContext *returnStatement();
     VariableDeclarationContext *variableDeclaration();
     VariableAssignmentContext *variableAssignment();
@@ -238,12 +244,28 @@ public:
 
   VariableDeclarationContext* variableDeclaration();
 
+  class  VariableDeclarationFragmentContext : public antlr4::ParserRuleContext {
+  public:
+    VariableDeclarationFragmentContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    TypeContext *type();
+    antlr4::tree::TerminalNode *ID();
+    antlr4::tree::TerminalNode *Equals();
+    ExpressionContext *expression();
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+   
+  };
+
+  VariableDeclarationFragmentContext* variableDeclarationFragment();
+
   class  VariableAssignmentContext : public antlr4::ParserRuleContext {
   public:
     VariableAssignmentContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *ID();
-    antlr4::tree::TerminalNode *Equals();
+    AssignmentOperatorContext *assignmentOperator();
     ExpressionContext *expression();
     antlr4::tree::TerminalNode *SemiColon();
 
@@ -253,6 +275,21 @@ public:
   };
 
   VariableAssignmentContext* variableAssignment();
+
+  class  VariableAssignmentFragmentContext : public antlr4::ParserRuleContext {
+  public:
+    VariableAssignmentFragmentContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    antlr4::tree::TerminalNode *ID();
+    AssignmentOperatorContext *assignmentOperator();
+    ExpressionContext *expression();
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+   
+  };
+
+  VariableAssignmentFragmentContext* variableAssignmentFragment();
 
   class  ReturnStatementContext : public antlr4::ParserRuleContext {
   public:
@@ -333,6 +370,30 @@ public:
 
   ElseStatementContext* elseStatement();
 
+  class  ForStatementContext : public antlr4::ParserRuleContext {
+  public:
+    ALangParser::ExpressionContext *test = nullptr;
+    ALangParser::ExpressionContext *increment = nullptr;
+    ForStatementContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    antlr4::tree::TerminalNode *For();
+    antlr4::tree::TerminalNode *OpenRoundBracket();
+    std::vector<antlr4::tree::TerminalNode *> SemiColon();
+    antlr4::tree::TerminalNode* SemiColon(size_t i);
+    antlr4::tree::TerminalNode *CloseRoundBracket();
+    BlockStatementContext *blockStatement();
+    std::vector<ExpressionContext *> expression();
+    ExpressionContext* expression(size_t i);
+    VariableDeclarationFragmentContext *variableDeclarationFragment();
+    VariableAssignmentFragmentContext *variableAssignmentFragment();
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+   
+  };
+
+  ForStatementContext* forStatement();
+
   class  ExpressionContext : public antlr4::ParserRuleContext {
   public:
     antlr4::Token *operation = nullptr;
@@ -344,11 +405,11 @@ public:
     ExpressionContext* expression(size_t i);
     antlr4::tree::TerminalNode *CloseRoundBracket();
     FunctionCallExpressionContext *functionCallExpression();
-    antlr4::tree::TerminalNode *ID();
-    AssignmentOperatorContext *assignmentOperator();
+    VariableAssignmentFragmentContext *variableAssignmentFragment();
     antlr4::tree::TerminalNode *BooleanConstant();
     antlr4::tree::TerminalNode *DoubleQuoteString();
     antlr4::tree::TerminalNode *NUMBER();
+    antlr4::tree::TerminalNode *ID();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;

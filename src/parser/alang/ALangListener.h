@@ -49,8 +49,14 @@ public:
   virtual void enterVariableDeclaration(ALangParser::VariableDeclarationContext *ctx) = 0;
   virtual void exitVariableDeclaration(ALangParser::VariableDeclarationContext *ctx) = 0;
 
+  virtual void enterVariableDeclarationFragment(ALangParser::VariableDeclarationFragmentContext *ctx) = 0;
+  virtual void exitVariableDeclarationFragment(ALangParser::VariableDeclarationFragmentContext *ctx) = 0;
+
   virtual void enterVariableAssignment(ALangParser::VariableAssignmentContext *ctx) = 0;
   virtual void exitVariableAssignment(ALangParser::VariableAssignmentContext *ctx) = 0;
+
+  virtual void enterVariableAssignmentFragment(ALangParser::VariableAssignmentFragmentContext *ctx) = 0;
+  virtual void exitVariableAssignmentFragment(ALangParser::VariableAssignmentFragmentContext *ctx) = 0;
 
   virtual void enterReturnStatement(ALangParser::ReturnStatementContext *ctx) = 0;
   virtual void exitReturnStatement(ALangParser::ReturnStatementContext *ctx) = 0;
@@ -66,6 +72,9 @@ public:
 
   virtual void enterElseStatement(ALangParser::ElseStatementContext *ctx) = 0;
   virtual void exitElseStatement(ALangParser::ElseStatementContext *ctx) = 0;
+
+  virtual void enterForStatement(ALangParser::ForStatementContext *ctx) = 0;
+  virtual void exitForStatement(ALangParser::ForStatementContext *ctx) = 0;
 
   virtual void enterExpression(ALangParser::ExpressionContext *ctx) = 0;
   virtual void exitExpression(ALangParser::ExpressionContext *ctx) = 0;

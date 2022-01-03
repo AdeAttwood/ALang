@@ -1,0 +1,20 @@
+// Copyright 2021-2022 Practically.io All rights reserved
+//
+// Use of this source is governed by a BSD-style
+// licence that can be found in the LICENCE file or at
+// https://www.practically.io/copyright/
+
+/// Test running a basic for
+function basic_for_test(): int {
+  int number = 10;
+  for (int i = 0; i < 100; i = i + 1) {
+    number = number + 1;
+  }
+
+  if (number != 110) {
+    return 1;
+  }
+
+  return 0;
+}
+

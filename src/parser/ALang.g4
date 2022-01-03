@@ -39,18 +39,17 @@ innerStatement
  : functionDeclaration
  | functionCall
  | ifElseIfElseStatement
+ | forStatement
  | returnStatement
  | variableDeclaration
  | variableAssignment
  ;
 
-variableDeclaration
- : type ID Equals expression SemiColon
- ;
+variableDeclaration:         type ID Equals expression SemiColon;
+variableDeclarationFragment: type ID Equals expression;
 
-variableAssignment
- : ID Equals expression SemiColon
- ;
+variableAssignment:        ID assignmentOperator expression SemiColon;
+variableAssignmentFragment:ID assignmentOperator expression;
 
 returnStatement
  : Return expression SemiColon
@@ -72,6 +71,11 @@ elseStatement
  : Else blockStatement
  ;
 
+forStatement
+ : For OpenRoundBracket (variableDeclarationFragment | variableAssignmentFragment) SemiColon test=expression SemiColon increment=expression CloseRoundBracket blockStatement
+ ;
+
+
 expression
  : '(' expression ')'
  | expression operation='*' expression
@@ -81,7 +85,7 @@ expression
  | expression test=('==' | '!=' | '<' | '<=' | '>' | '>=') expression
  | expression test=('&&' | '||') expression
  | functionCallExpression
- | ID assignmentOperator expression
+ | variableAssignmentFragment
  | BooleanConstant
  | DoubleQuoteString
  | NUMBER
@@ -105,6 +109,7 @@ Comment:  '//' ~[\r\n]* -> skip;
 
 Return: 'return';
 Function_: 'function';
+For: 'for';
 If: 'if';
 Else: 'else';
 ElseIf: 'else if';

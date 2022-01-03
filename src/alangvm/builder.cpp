@@ -341,6 +341,48 @@ void LLVMBuilderListener::enterReturnStatement(parser::alang::ALangParser::Retur
   }
 }
 
+void LLVMBuilderListener::enterForStatement(parser::alang::ALangParser::ForStatementContext *context) {
+  auto for_block = llvm::BasicBlock::Create(m_context, "for");
+  m_scopes.push_back(LLVMBuilderScope{
+      .current_function_name = m_scopes.back().current_function_name,
+      .current_function = m_scopes.back().current_function,
+      .block_stack = {for_block}});
+
+  if (context->variableDeclarationFragment()) {
+    auto variable_name = context->variableDeclarationFragment()->ID()->getText();
+    auto type = get_type(context->variableDeclarationFragment()->type());
+    auto allocation = m_builder->CreateAlloca(type, nullptr, variable_name);
+    m_scopes.back().variables.insert({variable_name, allocation});
+    auto variable_value = evaluate_expression(context->variableDeclarationFragment()->expression());
+    if (variable_value) {
+      m_builder->CreateStore(variable_value, allocation);
+    }
+  }
+
+  m_builder->CreateBr(for_block);
+
+  get_current_function()->getBasicBlockList().push_back(for_block);
+  m_builder->SetInsertPoint(for_block);
+}
+
+void LLVMBuilderListener::exitForStatement(parser::alang::ALangParser::ForStatementContext *context) {
+  auto for_end_block = llvm::BasicBlock::Create(m_context);
+  auto for_block = m_scopes.back().block_stack.back();
+
+  if (context->increment->variableAssignmentFragment()) {
+    auto allocation = get_variable(context->increment->variableAssignmentFragment()->ID());
+    auto value = evaluate_expression(context->increment->variableAssignmentFragment()->expression());
+    m_builder->CreateStore(value, allocation);
+  }
+
+  m_builder->CreateCondBr(evaluate_expression(context->test), m_scopes.back().block_stack.back(), for_end_block);
+
+  get_current_function()->getBasicBlockList().push_back(for_end_block);
+  m_builder->SetInsertPoint(for_end_block);
+
+  m_scopes.erase(m_scopes.end());
+}
+
 void LLVMBuilderListener::enterFunctionCall(parser::alang::ALangParser::FunctionCallContext *context) {
   auto function = get_function(context->ID());
   std::vector<llvm::Value *> arguments;

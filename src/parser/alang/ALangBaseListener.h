@@ -51,8 +51,14 @@ public:
   virtual void enterVariableDeclaration(ALangParser::VariableDeclarationContext * /*ctx*/) override { }
   virtual void exitVariableDeclaration(ALangParser::VariableDeclarationContext * /*ctx*/) override { }
 
+  virtual void enterVariableDeclarationFragment(ALangParser::VariableDeclarationFragmentContext * /*ctx*/) override { }
+  virtual void exitVariableDeclarationFragment(ALangParser::VariableDeclarationFragmentContext * /*ctx*/) override { }
+
   virtual void enterVariableAssignment(ALangParser::VariableAssignmentContext * /*ctx*/) override { }
   virtual void exitVariableAssignment(ALangParser::VariableAssignmentContext * /*ctx*/) override { }
+
+  virtual void enterVariableAssignmentFragment(ALangParser::VariableAssignmentFragmentContext * /*ctx*/) override { }
+  virtual void exitVariableAssignmentFragment(ALangParser::VariableAssignmentFragmentContext * /*ctx*/) override { }
 
   virtual void enterReturnStatement(ALangParser::ReturnStatementContext * /*ctx*/) override { }
   virtual void exitReturnStatement(ALangParser::ReturnStatementContext * /*ctx*/) override { }
@@ -68,6 +74,9 @@ public:
 
   virtual void enterElseStatement(ALangParser::ElseStatementContext * /*ctx*/) override { }
   virtual void exitElseStatement(ALangParser::ElseStatementContext * /*ctx*/) override { }
+
+  virtual void enterForStatement(ALangParser::ForStatementContext * /*ctx*/) override { }
+  virtual void exitForStatement(ALangParser::ForStatementContext * /*ctx*/) override { }
 
   virtual void enterExpression(ALangParser::ExpressionContext * /*ctx*/) override { }
   virtual void exitExpression(ALangParser::ExpressionContext * /*ctx*/) override { }
