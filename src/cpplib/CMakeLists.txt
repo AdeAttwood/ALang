@@ -11,9 +11,10 @@ foreach(SOURCE ${CPPLIB_SOURCE})
   file(RELATIVE_PATH SOURCE_RELATIVE ${CMAKE_CURRENT_LIST_DIR}  ${SOURCE})
   string(REGEX REPLACE "[.]cpp$" ".ll" OUTPUT_LL ${SOURCE_RELATIVE})
 
+  set(SOURCE_DEPENDS ${SOURCE})
   string(REGEX REPLACE "[.]cpp$" ".hpp" HEADER_SOURCE ${SOURCE})
   if(EXISTS "${HEADER_SOURCE}")
-    set(SOURCE_DEPENDS ${HEADER_SOURCE})
+    list(APPEND ${HEADER_SOURCE})
   endif()
 
   add_custom_command(
