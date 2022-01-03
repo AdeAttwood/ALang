@@ -14,12 +14,13 @@ class  ALangLexer : public antlr4::Lexer {
 public:
   enum {
     T__0 = 1, T__1 = 2, T__2 = 3, T__3 = 4, T__4 = 5, T__5 = 6, T__6 = 7, 
-    DocumentationComment = 8, Comment = 9, Return = 10, Function_ = 11, 
-    If = 12, Else = 13, ElseIf = 14, Int = 15, Void = 16, String = 17, Boolean = 18, 
-    BooleanConstant = 19, ID = 20, NUMBER = 21, OpenCurlyBracket = 22, CloseCurlyBracket = 23, 
-    OpenRoundBracket = 24, CloseRoundBracket = 25, OpenSquareBracket = 26, 
-    CloseSquareBracket = 27, Colon = 28, SemiColon = 29, Equals = 30, DoubleQuote = 31, 
-    DoubleQuoteString = 32, SPACE = 33
+    T__7 = 8, T__8 = 9, T__9 = 10, T__10 = 11, T__11 = 12, T__12 = 13, DocumentationComment = 14, 
+    Comment = 15, Return = 16, Function_ = 17, If = 18, Else = 19, ElseIf = 20, 
+    Int = 21, Void = 22, String = 23, Boolean = 24, BooleanConstant = 25, 
+    ID = 26, NUMBER = 27, OpenCurlyBracket = 28, CloseCurlyBracket = 29, 
+    OpenRoundBracket = 30, CloseRoundBracket = 31, OpenSquareBracket = 32, 
+    CloseSquareBracket = 33, Colon = 34, SemiColon = 35, Equals = 36, DoubleQuote = 37, 
+    DoubleQuoteString = 38, SPACE = 39
   };
 
   explicit ALangLexer(antlr4::CharStream *input);

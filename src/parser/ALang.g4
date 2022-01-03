@@ -78,7 +78,8 @@ expression
  | expression operation='/' expression
  | expression operation='+' expression
  | expression operation='-' expression
- | expression test=('==' | '!=') expression
+ | expression test=('==' | '!=' | '<' | '<=' | '>' | '>=') expression
+ | expression test=('&&' | '||') expression
  | functionCallExpression
  | ID assignmentOperator expression
  | BooleanConstant

@@ -129,12 +129,39 @@ llvm::Value *LLVMBuilderListener::evaluate_expression(parser::alang::ALangParser
     auto text = test->getText();
     auto left = evaluate_expression(expression->expression(0));
     auto right = evaluate_expression(expression->expression(1));
+
     if (text == "==") {
-      return m_builder->CreateICmpEQ(left, right);
+      auto a = m_builder->CreateICmpEQ(left, right);
+      auto b = a->getType();
+      return a;
     }
 
     if (text == "!=") {
       return m_builder->CreateICmpNE(left, right);
+    }
+
+    if (text == ">") {
+      return m_builder->CreateICmpSGT(left, right);
+    }
+
+    if (text == ">=") {
+      return m_builder->CreateICmpSGE(left, right);
+    }
+
+    if (text == "<") {
+      return m_builder->CreateICmpSLT(left, right);
+    }
+
+    if (text == "<=") {
+      return m_builder->CreateICmpSLE(left, right);
+    }
+
+    if (text == "||") {
+      return m_builder->CreateOr(left, right);
+    }
+
+    if (text == "&&") {
+      return m_builder->CreateAnd(left, right);
     }
   }
 
